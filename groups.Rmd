@@ -1,0 +1,247 @@
+---
+title: "groups"
+author: "Kimmy"
+date: '2022-11-09'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# How do population divisions affect epidemics?
+
+The previous models all assumed that everyone faces the same risk of infection and reacts the same way. In reality, there may be big differences in disease risk and protective behavior uptake within a population. These differences could follow existing divides in the population, including age, socioeconomic status, race/ethnicity, political partisanship. For our final model, we separate the population into two groups (group *a* and group *b*), and assume half of the population is in each group. People cannot change their group over the course of the simulation. For this example, the difference between the two groups is that the infectious disease starts out in group *a* only.
+
+Next, we look at potential divisions between the groups. Mixing separation (*h*) says how many of a person's contact will be in their own group versus the opposite group. Under uniform mixing ($h=0.5$), the groups are interacting with each other equally. Any contact is equally likely to be with someone in the same group as with someone in the opposite group. Greater values of *h* mean that there's more mixing separation, so a member of one group will rarely come into contact with the other group. If *h* is one, then the groups are totally isolated from each other. We'll look separated mixing ($h=0.99$) here, where contacts are almost entirely within one's own group but there's a small amount of interaction between the groups. This means that the disease can spread between the two groups. 
+
+On top of that, we also introduce awareness separation ($\epsilon$) where people may be more likely to use protective measures if they hear about deaths in their own group compared to the opposite group. With uniform awareness ($\epsilon=0.5$), people pick up protective behavior without considering whether the deaths are in their own group or not. With separated awareness ($\epsilon=0.99$), people have a lot of awareness of deaths in their own group but place little weight on deaths in the opposite group. If $\epsilon$ reached one, that would mean members of one group do not consider deaths in the opposite group at all when deciding whether to use protective behavior.
+
+In the figure below, we look at infections over time in group *a* (pink) and group *b* (green) across different combinations of awareness and mixing separation. When mixing is uniform, there is no difference between the groups because the infectious disease spreads quickly from group *a* into group *b*. When mixing is separated, the groups experience different epidemic trajectories because it takes a bit of time before the infectious disease begins to spread in group *b*. If mixing is separated, awareness separation can change the epidemic shape in both groups. In this case, uniform mixing leads to a smaller epidemic in group *b* because the group receives an early warning of the upcoming epidemic by seeing initial deaths in group *a*. Group *b* therefore has time to adopt protective behavior before the infectious disease starts spreading. The opposite happens in group *a* under uniform awareness; group *a* will underestimate its initial risk and have a larger epidemic. With separated awareness, group *b* does not respond much to the early deaths in group *a* and loses the early warning. Meanwhile, group *a* pays more attention to the initial deaths within its group and pick up protective behavior at the beginning of the epidemic. Separated awareness causes the two groups to have epidemics that are the same size.
+
+What happens if mixing separation (*h*) is at some intermediate values between 0.5 and 0.99? What about awareness separation ($\epsilon$)? How does the different in epidemic size between the two groups under uniform awareness and separated mixing change depending on other values related to the disease, protective behavior, or awareness?
+
+```{r h-epsilon, echo = FALSE, message = FALSE, warning = FALSE, dpi=300}
+library(cowplot)
+library(grid)
+library(magrittr)
+
+library(deSolve)
+library(tidyverse)
+library(reshape2)
+
+full_aware<-function(h=NA, epsilon=NA, mu=NA, kappa=NA, beta=NA, rho=NA, 
+                     theta=5, phi=.1, kappa_a=.1,  kappa_b=.1, rho_a=.1,  
+                     mu_a=.05, mu_b=.05, beta_a=.5, beta_b=.5, rho_b=.1,
+                     ha=.99, hb=.99, epsilon_a=.5, epsilon_b=.5, ell=1, I0_a=.005/2, I0_b=.005/2, v_val=0, v_start=0, time=500, theta_a=.2, theta_b=.2,
+                     get_params=FALSE){
+  if(!is.na(beta)){
+    beta_a<-beta
+    beta_b<-beta
+  }
+  
+  if(!is.na(kappa)){
+    kappa_a<-kappa
+    kappa_b<-kappa
+  }
+  
+  if(!is.na(mu)){
+    mu_a<-mu
+    mu_b<-mu
+  }
+  
+  if(!is.na(rho)){
+    rho_a<-rho
+    rho_b<-rho
+  }
+  
+  if(!is.na(h)){
+    ha<-h
+    hb<-h
+  }
+  
+  if(!is.na(epsilon)){
+    epsilon_a<-epsilon
+    epsilon_b<-epsilon
+  }
+  
+  if(theta != 5){
+    theta_a<-theta
+    theta_b<-theta
+  }
+  
+  params<-c("kappa_a"=kappa_a, "kappa_b"=kappa_b,  "theta"=theta, 
+            "beta_a"=beta_a, "beta_b"=beta_b, "rho"=rho, "phi"=phi, 
+            "rho_a"=rho_a, "rho_b"=rho_b,
+            "mu_a"=mu_a, "mu_b"=mu_b, "epsilon_a"=epsilon_a, "epsilon_b"=epsilon_b,  "ha"=ha, "hb"=hb, "ell"=ell, "v_start"=v_start, "v_val"=v_val, "time"=time, "I0_a"=I0_a, "I0_b"=I0_b, "theta_a"=theta_a, "theta_b"=theta_b) 
+  state<-c( 
+    
+    #group a
+    SUa<-1-I0_a,
+    SPa<-0,
+    IUa<-I0_a,
+    IPa<-0,
+    RUa<-0,
+    RPa<-0,
+    DUa<-0,
+    DPa<-0,
+    
+    
+    #group b
+    SUb<-1-I0_b,
+    SPb<-0,
+    IUb<-I0_b,
+    IPb<-0,
+    RUb<-0,
+    RPb<-0,
+    DUb<-0,
+    DPb<-0
+
+   
+  )
+  
+  names(state)<- c("SUa", "SPa", "IUa", "IPa", "RUa", "RPa", "DUa", "DPa", 
+                   "SUb", "SPb", "IUb", "IPb", "RUb", "RPb", "DUb", "DPb")
+  
+  sir_upu<-function(t, state, parameter){
+    
+    with(as.list(c(parameter, state)), {
+      
+      
+      if(t<ell){
+        lag<-rep(0, 16)
+      }
+      else{
+        lag<-lagvalue(t-ell)
+      }
+      
+      #transitions for group a
+      if(t>v_start){
+        v <- v_val
+      }
+      else{
+        v<-0
+      }
+      
+      dSUa <- -sqrt(beta_a)*SUa*(sqrt(beta_a)*ha*(IUa+kappa_a*IPa)+sqrt(beta_b)*(1-ha)*(IUb+kappa_b*IPb)) - 
+        theta_a * SUa * (epsilon_a * (DUa+DPa-lag[7]-lag[8]) + (1-epsilon_a) * (DUb+DPb-lag[15]-lag[16]) ) + phi * SPa  
+      
+      dSPa <- -sqrt(beta_a)*kappa_a*SPa*(sqrt(beta_a)*ha*(IUa+kappa_a*IPa)+sqrt(beta_b)*(1-ha)*(IUb+kappa_b*IPb)) + 
+        theta_a * SUa * (epsilon_a * (DUa+DPa-lag[7]-lag[8]) + (1-epsilon_a) * (DUb+DPb-lag[15]-lag[16]) ) - phi * SPa  -
+        v*SPa
+      
+      dIUa <- sqrt(beta_a)*SUa*(sqrt(beta_a)*ha*(IUa+kappa_a*IPa)+sqrt(beta_b)*(1-ha)*(IUb+kappa_b*IPb)) - 
+        theta_a * IUa * (epsilon_a * (DUa+DPa-lag[7]-lag[8]) + (1-epsilon_a) * (DUb+DPb-lag[15]-lag[16]) ) + phi * IPa -
+        (rho_a) * IUa
+      
+      dIPa <- sqrt(beta_a)*kappa_a*SPa*(sqrt(beta_a)*ha*(IUa+kappa_a*IPa)+sqrt(beta_b)*(1-ha)*(IUb+kappa_b*IPb)) + 
+        theta_a * IUa * (epsilon_a * (DUa+DPa-lag[7]-lag[8]) + (1-epsilon_a) * (DUb+DPb-lag[15]-lag[16])  ) - phi * IPa -
+        (rho_a) * IPa
+      
+      dRUa <- rho_a * (1-mu_a) * IUa - 
+        theta_a * RUa * (epsilon_a * (DUa+DPa-lag[7]-lag[8]) + (1-epsilon_a) * (DUb+DPb-lag[15]-lag[16]) ) + phi * RPa  
+      
+      dRPa <- rho_a * (1-mu_a) * IPa + v * SPa +
+        theta_a * RUa * (epsilon_a * (DUa+DPa-lag[7]-lag[8]) + (1-epsilon_a) * (DUb+DPb-lag[15]-lag[16])  ) - phi * RPa  
+      
+      dDUa <- rho_a*mu_a*IUa
+      
+      dDPa <- rho_a*mu_a*IPa
+  
+      #transitions for group b
+  
+      dSUb <- -sqrt(beta_b)*SUb*(sqrt(beta_a)*(1-hb)*(IUa+kappa_a*IPa)+sqrt(beta_b)*(hb)*(IUb+kappa_b*IPb)) - 
+        theta_b * SUb * ((1-epsilon_b) * (DUa+DPa-lag[7]-lag[8]) + (epsilon_b) * (DUb+DPb-lag[15]-lag[16]) ) + phi * SPb
+      
+      dSPb <- -sqrt(beta_b)*kappa_b*SPb*(sqrt(beta_a)*(1-hb)*(IUa+kappa_a*IPa)+sqrt(beta_b)*(hb)*(IUb+kappa_b*IPb)) + 
+        theta_b * SUb * ((1-epsilon_b) * (DUa+DPa-lag[7]-lag[8]) + (epsilon_b) * (DUb+DPb-lag[15]-lag[16])  ) - phi * SPb -
+        v * SPb
+      
+      dIUb <- sqrt(beta_b)*SUb*(sqrt(beta_a)*(1-hb)*(IUa+kappa_a*IPa)+sqrt(beta_b)*(hb)*(IUb+kappa_b*IPb)) - 
+        theta_b * IUb * ((1-epsilon_b) * (DUa+DPa-lag[7]-lag[8]) + (epsilon_b) * (DUb+DPb-lag[15]-lag[16])  ) + phi * IPb -
+       (rho_b) * IUb
+      
+      dIPb <- sqrt(beta_b)*kappa_b*SPb*(sqrt(beta_a)*(1-hb)*(IUa+kappa_a*IPa)+sqrt(beta_b)*(hb)*(IUb+kappa_b*IPb)) +
+        theta_b * IUb * ((1-epsilon_b) * (DUa+DPa-lag[7]-lag[8]) + (epsilon_b) * (DUb+DPb-lag[15]-lag[16]) ) - phi * IPb -
+        (rho_b) * IPb
+      
+      dRUb <- (1-mu_b) * rho_b * IUb - 
+        theta_b * RUb * ((1-epsilon_b) * (DUa+DPa-lag[7]-lag[8]) + (epsilon_b) * (DUb+DPb-lag[15]-lag[16]) ) + phi * RPb
+      
+      dRPb <- (1-mu_b) * rho_b * IPb + v * SPb +
+        theta_b * RUb * ((1-epsilon_b) * (DUa+DPa-lag[7]-lag[8]) + (epsilon_b) * (DUb+DPb-lag[15]-lag[16])  ) - phi * RPb
+      
+      dDUb <- rho_b*mu_b*IUb
+      
+      dDPb <- rho_b*mu_b*IPb
+      
+
+      
+      return(list(c(dSUa, dSPa, dIUa, dIPa, dRUa, dRPa, dDUa, dDPa,
+                    dSUb, dSPb, dIUb, dIPb, dRUb, dRPb, dDUb, dDPb
+      )))
+    })
+  }
+  
+  times<-seq(from=0, to=time, by=1)
+
+  as.data.frame(dede(state, times, sir_upu, params))->sim
+  
+  if(get_params){
+    return(list(sim=sim, params=params))
+  }
+  
+  else{
+    return(sim)
+  }
+
+}
+
+
+
+theme_set(
+  theme_classic(base_size = 16)
+)
+
+#can change the values of h and epsilon. Both vectors can be any length.
+h<-c(.5, .99)
+epsilon<-c(.5, .99)
+
+expand.grid(h=h, epsilon=epsilon)  %>%
+  data.frame() %>%
+  apply(1, function(par) full_aware(theta=100, beta=.2, rho=.1, mu=.01, h=par[["h"]],time=200, kappa=.3, I0_a=.001, I0_b=0, ell=1, phi=0, epsilon=par[["epsilon"]]) %>% 
+          cbind(h=par[["h"]], epsilon=par[["epsilon"]])) %>% 
+  do.call(rbind, .) %>%
+  mutate(eps_descript = ifelse(epsilon==.5, "Uniform Awareness", 
+                               ifelse(epsilon==.99,"Separated Awareness",
+                                      " "))) %>%
+  mutate(h_descript = ifelse(h==.5, "Uniform \nMixing", 
+                             ifelse(h==.99,"Separated \nMixing",
+                                    " "))) -> df
+
+
+line_sz<-.8
+
+
+ggplot(df)+geom_line(aes(x=time, y=IUa+IPa), size=line_sz, color="#f4a896")+geom_line(aes(x=time, y=IUb+IPb, size=as.factor(h)), color="#358597")+
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, size=1)+
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, size=1)+
+  geom_hline(yintercept=c(0,.04,.08, .12), linetype="dotted", color="gray")+
+  facet_grid(h+h_descript~epsilon+eps_descript, 
+             labeller=label_bquote(
+               cols=atop(atop(phantom(), .(eps_descript)), atop("("~epsilon==.(epsilon)~")", phantom())),
+               rows=atop(atop(.(h_descript), ""), atop("("~h==.(h)~")", phantom()))))+
+  ylab("Infections")+
+  theme(strip.text.y = element_text(angle = 0))+scale_y_continuous(breaks=c(0, .04, .08, .12))+
+  scale_size_manual(values=c("0.5"=.3*line_sz, "0.99"=line_sz), guide="none", na.value = line_sz)+
+  scale_colour_manual(name="", 
+                      labels = c(expression("group"~italic(a)), expression("group"~italic(b))),
+                      values = c("group *a*"="#f4a896", "group *b*"="#358597"))+
+  theme(strip.text=element_text(size=20))
+
+
+
+
+```
+
+

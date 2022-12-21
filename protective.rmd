@@ -1,0 +1,153 @@
+---
+output:
+  html_document:
+    mathjax: "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+runtime: shiny
+
+---
+
+# What is protective behavior?
+
+Protective behaviors are things such as vaccination, mask-wearing, hand washing, and social distancing. These are behaviors that people participate in that can help prevent the spread of infectious diseases. Our model looks at both the efficacy and uptake of these behaviors.
+
+Protective behavior efficacy ($\kappa$) scales the transmission term and may range between perfect protection ($\kappa=0$) and no impact on transmission ($\kappa=1$). In our model, protective behaviors prevent susceptible people from becoming sick and prevent infected people from spreading the pathogen. 
+
+In the following figure, we simulate an epidemic of the same disease from the explainer about the basic model. Everyone adopts protective behavior. We compare perfect protection efficacy ($\kappa=0$), intermediate protection efficacy ($\kappa=0.6$), and the baseline epidemic where protective measures have no effect ($\kappa=1$). How do protective measures change the shape and size of the infection trajectory? Where or not there is an epidemic? When the herd immunity threshold is reached?
+
+```{r kappa, echo = FALSE, message = FALSE, warning = FALSE, dpi=300}
+library(ggthemes)
+library(magrittr)
+library(dplyr)
+library(deSolve)
+library(ggplot2)
+library(extrafont)
+library(shiny)
+
+
+
+SIR_w_pb_run <- function(b=.2,r=.1,I0=.01, P0= 0.5, k=0.4, m=.05, t=50){
+  model <- function (time, init, parms) {
+    with(as.list(c(init, parms)), {
+      dSU <- -b*SU*(IU+k*IP)
+      dSP <- -b*k*SP*(IU+k*IP)
+      dIU <- b*SU*(IU+k*IP)-(r)*IU
+      dIP <- b*k*SP*(IU+k*IP)-(r)*IP
+      dRU <- r*IU
+      dRP <- r*IP
+      dDU <- r*(1-m)*IU
+      dDP <- r*(1-m)*IP
+      list(c(dSU, dSP, dIU, dIP, dRU, dRP, dDU, dDP))
+    })
+  }
+  
+ 
+  init<-c(SU=(1-P0)*(1-I0), SP=P0*(1-I0), IU=(1-P0)*I0, IP=P0*I0, RU=0, RP=0, DU=0, DP=0)
+  parms <- c(b=b, r=r, k=k, m=m)
+  time <- seq(1, t, 1)
+  output <- ode(init, time, model,parms)
+  return(data.frame(output))
+}
+
+#creates a list called df
+df<-list()
+
+
+for(x in c(0, .6, 1)){
+  df[[toString(x)]] <- SIR_w_pb_run(t=200, P0=1, k=x)|>
+  mutate(S=SU+SP,
+         I=IU+IP, 
+         R=RU+RP,
+         D=DU+DP)|>
+  mutate(N=S+I+R+D)|>
+  mutate(kappa=x)
+  
+}
+
+df<-do.call(rbind,df)
+
+
+
+ 
+SIR_plot <- function(df){
+  ggplot() +
+    geom_line(data = data.frame(df), size = 1.5, alpha =0.9, aes(color=as.factor(kappa), group=kappa, x = time, y = I))+
+    # geom_line(data = data.frame(outbreak), size = 1.5, alpha =0.9, aes(x = time, y = S,  col="Blue"))+
+    labs(title = "",
+         x="Time",
+         y="Infections")+
+    theme_fivethirtyeight()+
+    theme(axis.line = element_line(color='black'),
+          plot.background = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(), 
+          axis.title = element_text())+
+        scale_color_brewer(palette="Set1", name=expression(kappa))
+  #  scale_color_discrete(name=expression(kappa))
+}
+SIR_plot(df)
+
+
+
+```
+
+
+We also consider protective behavior uptake ($P_0$), which is the proportion of the population participating in the protective behaviors. For example, if $P_0=1$ then that means 100% of the population wears masks. But if $P_0=0.25$ then only about a quarter of the population wears mask and the disease will spread more widely. This model assumes that people are either protective or unprotective and that they cannot change their behavior over time. In the next model, we will consider what happens if people can change their behavior. 
+
+In the figure below, we look at what happens if 25%, 50%, or 100% of the population adopts a highly effective protective measure ($\kappa=0.3$). How does protective behavior uptake ($P_0$) affect the epidemic shape and size? Can you find different combinations of values for $P_0$ and $\kappa$ that produce similar epidemic dynamics? 
+
+
+
+```{r P0, echo = FALSE, message = FALSE, warning = FALSE, dpi=300 }
+library(ggthemes)
+library(magrittr)
+library(dplyr)
+library(deSolve)
+library(ggplot2)
+library(extrafont)
+library(shiny)
+
+
+#creates a list called df
+df<-list()
+
+
+for(x in c(.25, .5, 1)){
+  df[[toString(x)]] <- SIR_w_pb_run(t=200, P0=x, k=.3)|>
+  mutate(S=SU+SP,
+         I=IU+IP, 
+         R=RU+RP,
+         D=DU+DP)|>
+  mutate(N=S+I+R+D)|>
+  mutate(P0=x)
+  
+}
+
+df<-do.call(rbind,df)
+
+
+
+ 
+SIR_plot <- function(df){
+  ggplot() +
+    geom_line(data = data.frame(df), size = 1.5, alpha =0.9, aes(color=as.factor(P0), group=P0, x = time, y = I))+
+    # geom_line(data = data.frame(outbreak), size = 1.5, alpha =0.9, aes(x = time, y = S,  col="Blue"))+
+    labs(title = "",
+         x="Time",
+         y="Infections")+
+    theme_fivethirtyeight()+
+    theme(axis.line = element_line(color='black'),
+          plot.background = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.border = element_blank(), 
+          axis.title = element_text())+
+        scale_color_brewer(palette="Set1", name=expression(P[0]))
+  #  scale_color_discrete(name=expression(kappa))
+}
+SIR_plot(df)
+
+
+
+```
+
