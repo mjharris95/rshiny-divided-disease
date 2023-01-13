@@ -12,7 +12,7 @@ The site consists of 4 "Explainer" tabs and 4 "Interactive App" tabs. You can cl
 
 ## Models
 
-The site consists of 4 models that build on each other in terms of complexity:
+The site consists of four models that build on each other in terms of complexity:
 
 -   Basic Disease
 
