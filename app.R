@@ -327,7 +327,7 @@ server <- function(input,output){
   
   
   output$explain_protective <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./protective.Rmd", quiet=TRUE))))
+    withMathJax(HTML(markdown::markdownToHTML(knit("./protective.rmd", quiet=TRUE))))
   })
   
   
@@ -453,16 +453,6 @@ server <- function(input,output){
     HTML(paste("<br/><br/><br/>",string_cuminf, string_peakinf, string_whenpeak, string_cumdth, sep = '<br/>'))
     
   })
-  
-  
-  
-  output$explain_protective <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./protective.Rmd", quiet=TRUE))))
-  })
-  
-  
-  
-  
   
   output$explain_awareness <- renderUI({
     withMathJax(HTML(markdown::markdownToHTML(knit("./awareness.Rmd", quiet=TRUE))))
