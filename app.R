@@ -5,7 +5,7 @@ library(rsconnect)
 library(markdown)
 library(knitr)
 library(shinyWidgets)
-install.packages(tags$head)
+
 # rsconnect::setAccountInfo(name='kimberlycardenas',
 #                           token='1BFB8E11895A9A3016A3FF1BED945501',
 #                           secret='Zdwim0dRiv8ZUgoTl/gJKr8bMQBflgYvHvSlUh/S')
@@ -28,16 +28,16 @@ ui <- navbarPage(fluid=TRUE, title="",
                
                #h1("Colored Tabs"),
                tags$style(HTML("
-     .nav > li > a[data-value='Introduction']                  {background-color: aqua;  color:black}
-     .nav > li > a[data-value='Basic Disease Explainer'] {background-color: blue;   color:white}
-     .nav > li > a[data-value='Basic Disease (Interactive)'] {background-color: blue;   color:white}
-     .nav > li > a[data-value='Protective Behavior Explainer'] {background-color: pink;  color:white}
-     .nav > li > a[data-value='Protective Behavior (Interactive)'] {background-color: pink;  color:white}
-     .nav > li > a[data-value='Awareness Explainer'] {background-color: green; color:white}
-     .nav > li > a[data-value='Awareness (Interactive)'] {background-color: green; color:white}
-     .nav > li > a[data-value='Groups Explainer'] {background-color: purple; color:white}
-     .nav > li > a[data-value='Groups (Interactive)'] {background-color: purple; color:white}
-     .nav > li > a[data-value='Credits']                  {background-color: aqua;  color:black}
+     .nav > li > a[data-value='Introduction']                  {background-color: #FFCE54;  color:black}
+     .nav > li > a[data-value='Basic Disease Explainer'] {background-color: #ED5564;   color:white}
+     .nav > li > a[data-value='Basic Disease (Interactive)'] {background-color: #ED5564;   color:white}
+     .nav > li > a[data-value='Protective Behavior Explainer'] {background-color: #A0D568;  color:white}
+     .nav > li > a[data-value='Protective Behavior (Interactive)'] {background-color: #A0D568;  color:white}
+     .nav > li > a[data-value='Awareness Explainer'] {background-color: #4FC1E8; color:white}
+     .nav > li > a[data-value='Awareness (Interactive)'] {background-color: #4FC1E8; color:white}
+     .nav > li > a[data-value='Groups Explainer'] {background-color: #AC92EB; color:white}
+     .nav > li > a[data-value='Groups (Interactive)'] {background-color: #AC92EB; color:white}
+     .nav > li > a[data-value='Credits']                  {background-color: #FFCE54;  color:black}
   ")),
               
              
@@ -48,7 +48,7 @@ ui <- navbarPage(fluid=TRUE, title="",
                 
                  
                  tabPanel(title="Basic Disease Explainer",
-                          withMathJax(HTML(markdown::markdownToHTML(knit("./basic.md", quiet=TRUE))))),
+                          withMathJax(HTML(markdown::markdownToHTML(knit("basic.md", quiet=TRUE))))),
                  
                  tabPanel(title = "Basic Disease (Interactive)",
                           withMathJax(),
@@ -57,11 +57,11 @@ ui <- navbarPage(fluid=TRUE, title="",
                           #                   tex2jax: {inlineMath: [['$','$']]}
                           #                   });
                           #                   </script>")),
-                          #"#CC6677", "#CC6677", "#CC6677", "#999933", "#999933", "#999933", "#999933", "#999933", "#999933", "#999933", "#332288", "#332288", "#332288", "#FOE442", "#D55E00"
-                          setSliderColor(c("#FOE442", "#FOE442", "#FOE442", "#FOE442",
-                                           "#CC6677", "#CC6677", "#FOE442", "#FOE442", "#FOE442", "#FOE442",
-                                           "#999933", "#999933", "#999933", "#CC6677", "#CC6677", "#FOE442", "#FOE442", "#FOE442", "#FOE442",
-                                           "#332288", "#332288", "#332288", "#332288", "#999933", "#999933", "#999933", "#CC6677", "#FOE442", "#FOE442", "#FOE442", "#FOE442"), 
+                          #"#A0D568", "#A0D568", "#A0D568", "#4FC1E8", "#4FC1E8", "#4FC1E8", "#4FC1E8", "#4FC1E8", "#4FC1E8", "#4FC1E8", "#AC92EB", "#AC92EB", "#AC92EB", "#ED5564", "#D55E00"
+                          setSliderColor(c("#ED5564", "#ED5564", "#ED5564", "#ED5564",
+                                           "#A0D568", "#A0D568", "#ED5564", "#ED5564", "#ED5564", "#ED5564",
+                                           "#4FC1E8", "#4FC1E8", "#4FC1E8", "#A0D568", "#A0D568", "#ED5564", "#ED5564", "#ED5564", "#ED5564",
+                                           "#AC92EB", "#AC92EB", "#AC92EB", "#AC92EB", "#4FC1E8", "#4FC1E8", "#4FC1E8", "#A0D568", "#ED5564", "#ED5564", "#ED5564", "#ED5564"), 
                                          1:31),
                           
                           fluidRow(
@@ -356,7 +356,7 @@ server <- function(input,output){
   
   
   output$explain_protective <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./protective.rmd", quiet=TRUE))))
+    withMathJax(HTML(markdown::markdownToHTML(knit("protective.rmd", quiet=TRUE))))
   })
   
   
@@ -484,7 +484,7 @@ server <- function(input,output){
   })
   
   output$explain_awareness <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./awareness.Rmd", quiet=TRUE))))
+    withMathJax(HTML(markdown::markdownToHTML(knit("awareness.Rmd", quiet=TRUE))))
   })
   output$SIRPlot_awareness <- renderPlot({
     library(ggthemes)
@@ -624,7 +624,7 @@ server <- function(input,output){
   
   #}
   output$explain_groups <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./groups.Rmd", quiet=TRUE))))
+    withMathJax(HTML(markdown::markdownToHTML(knit("groups.Rmd", quiet=TRUE))))
   })
   
   
@@ -994,10 +994,10 @@ server <- function(input,output){
     
   }) 
   output$Credits <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./Credits.Rmd", quiet=TRUE))))
+    withMathJax(HTML(markdown::markdownToHTML(knit("Credits.Rmd", quiet=TRUE))))
   })
   output$Overview <- renderUI({
-    withMathJax(HTML(markdown::markdownToHTML(knit("./overview.Rmd", quiet=TRUE))))
+    withMathJax(HTML(markdown::markdownToHTML(knit("overview.Rmd", quiet=TRUE))))
   })
 }
 
