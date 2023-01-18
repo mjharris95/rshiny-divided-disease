@@ -5,6 +5,7 @@ library(rsconnect)
 library(markdown)
 library(knitr)
 library(shinyWidgets)
+install.packages(tags$head)
 # rsconnect::setAccountInfo(name='kimberlycardenas',
 #                           token='1BFB8E11895A9A3016A3FF1BED945501',
 #                           secret='Zdwim0dRiv8ZUgoTl/gJKr8bMQBflgYvHvSlUh/S')
@@ -14,9 +15,37 @@ library(shiny)
 knit("basic.rmd")
 
 ui <- navbarPage(fluid=TRUE, title="",
-                 
-                 tabPanel(title = "Introduction",
-                          uiOutput("Overview")),
+               
+  
+                #this changes whole background where the tabs are, not individual tabs 
+                 #tags$style(HTML("
+                # .navbar { background-color:blue;}
+               #  ")),  
+               #wont use this
+               
+               
+               #I want different color pallet?? to match sliders but doesnt let me 
+               
+               #h1("Colored Tabs"),
+               tags$style(HTML("
+     .nav > li > a[data-value='Introduction']                  {background-color: aqua;  color:black}
+     .nav > li > a[data-value='Basic Disease Explainer'] {background-color: blue;   color:white}
+     .nav > li > a[data-value='Basic Disease (Interactive)'] {background-color: blue;   color:white}
+     .nav > li > a[data-value='Protective Behavior Explainer'] {background-color: pink;  color:white}
+     .nav > li > a[data-value='Protective Behavior (Interactive)'] {background-color: pink;  color:white}
+     .nav > li > a[data-value='Awareness Explainer'] {background-color: green; color:white}
+     .nav > li > a[data-value='Awareness (Interactive)'] {background-color: green; color:white}
+     .nav > li > a[data-value='Groups Explainer'] {background-color: purple; color:white}
+     .nav > li > a[data-value='Groups (Interactive)'] {background-color: purple; color:white}
+     .nav > li > a[data-value='Credits']                  {background-color: aqua;  color:black}
+  ")),
+              
+             
+              
+               
+                 tabPanel(title = "Introduction", 
+                  uiOutput("Overview")),
+                
                  
                  tabPanel(title="Basic Disease Explainer",
                           withMathJax(HTML(markdown::markdownToHTML(knit("./basic.md", quiet=TRUE))))),
