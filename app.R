@@ -76,7 +76,7 @@ ui <- navbarPage(fluid=TRUE, title="",
                                       value = 10, min = 1, max = 30),
                           sliderInput(inputId = "m1",
                                       label =  withMathJax("Fatality probability (μ)"),
-                                      value = .01, min = 0, max = 1),
+                                      value = .00, min = 0, max = 0.2),
                           sliderInput(inputId = "t1",
                                       label =  withMathJax("Simulation duration (days)"),
                                       value = 200, min = 0, max = 2500)
@@ -110,7 +110,7 @@ ui <- navbarPage(fluid=TRUE, title="",
                                                value = 10, min = 1, max = 30),
                                    sliderInput(inputId = "m2",
                                                label =  withMathJax("Fatality probability (μ)"),
-                                               value = .01, min = 0, max = 1),
+                                               value = .00, min = 0, max = 0.2),
                                    sliderInput(inputId = "t2",
                                                label =  withMathJax("Simulation duration (days)"),
                                                value = 200, min = 0, max = 2500)
@@ -343,6 +343,7 @@ server <- function(input,output){
     
     SIRvalues<-SIR_analyze(df)
     
+    
     string_cuminf <- paste("Cumulative infection incidence:", signif(SIRvalues$CI, digits = 3))
     string_peakinf <- paste("Peak infection prevalence:", signif(SIRvalues$PII, digits = 3))
     string_whenpeak <- paste("Infection prevalence peak on day:", signif(SIRvalues$Peak, digits = 3))
@@ -473,7 +474,7 @@ server <- function(input,output){
     
     SIRvalues2<-SIR_analyze(df)
     
-    string_cuminf <- paste("Cumulative infection incidence:", signif(SIRvalues2$CI, digits = 3))
+    string_cuminf <- paste("Note: Changing parameters may change y-axis scale.<br/>Cumulative infection incidence:", signif(SIRvalues2$CI, digits = 3))
     string_peakinf <- paste("Peak infection prevalence:", signif(SIRvalues2$PII, digits = 3))
     #paste(" total number of deaths are", signif(SIRvalues2$D, digits = 3))
     string_whenpeak <- paste("Infection prevalence peak on day:", signif(SIRvalues2$Peak, digits = 3))
