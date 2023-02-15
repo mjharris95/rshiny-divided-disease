@@ -54,4 +54,4 @@ $R_0$, also known as R-naught is the basic reproduction number, which can help u
 
 $R_0>1$ predicts an epidemic. $R_0<1$ predicts that the disease will die out without being able to sustain an epidemic. When $R_0=1$ and there are no interventions, it predicts stable sustained transmission of the pathogen. A hypothetical disease with an $R_0$ of about 10, one infected individual in a classroom could on average infect 10 classmates if nobody is already vaccinated or immune. A hypothetical disease with an $R_0$ of 0.3 to 0.8 would be less likely to cause an epidemic, eventually the disease will die off. It is harder to calculate the $R_0$ early on in an outbreak of a novel disease due to data limitations, but calculating this quantity can help us prepare for an epidemic. Using our interactive simulation tool, you can examine the relationship between $R_0$ and epidemic metrics like cumulative infection incidence, peak infection prevalence, and the date of peak infections. In our next model, we will examine how protective measures can change and help suppress epidemics.
 
-![](images/bubble.png)
+![](images/Picture7.png)
