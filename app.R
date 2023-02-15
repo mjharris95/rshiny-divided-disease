@@ -14,20 +14,22 @@ library(shiny)
 
 knit("basic.rmd")
 
-ui <- navbarPage(fluid=TRUE, title="",
+ui <- navbarPage(position = ("static-top"), collapsible = TRUE, fluid = TRUE,  title="", setBackgroundColor(
+  color = c("#AFD5EB", "#AFD5EB"), gradient = "radial", direction = c("top", "left")), 
                
-  
+                 
+                 
                 #this changes whole background where the tabs are, not individual tabs 
                  #tags$style(HTML("
                 # .navbar { background-color:blue;}
                #  ")),  
                #wont use this
-               
-               
+               #ffffff00 just makes it transparent
                #I want different color pallet?? to match sliders but doesnt let me 
                
                #h1("Colored Tabs"),
                tags$style(HTML("
+      .navbar { background-color:#ffffff00;}
      .nav > li > a[data-value='Introduction']                  {background-color: #FFCE54;  color:black}
      .nav > li > a[data-value='Basic Disease Explainer'] {background-color: #ED5564;   color:white}
      .nav > li > a[data-value='Basic Disease (Interactive)'] {background-color: #ED5564;   color:white}
@@ -40,9 +42,8 @@ ui <- navbarPage(fluid=TRUE, title="",
      .nav > li > a[data-value='Credits']                  {background-color: #FFCE54;  color:black}
   ")),
               
-             
-              
-               
+
+        #sidebarLayout(sidebarPanel, position = "left", fluid=TRUE),       
                  tabPanel(title = "Introduction", 
                   uiOutput("Overview")),
                 

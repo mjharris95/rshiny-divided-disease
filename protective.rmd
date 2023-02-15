@@ -7,6 +7,8 @@ runtime: shiny
 
 # What is protective behavior?
 
+![](images/labcoat.jpeg)
+
 Protective behaviors are things such as vaccination, mask-wearing, hand washing, and social distancing. These are behaviors can help prevent the spread of infectious diseases. We primarly focus on protective rates that lower the transmission rate, and not protective behaviors that shift people into the recovered category such as vaccination. Our model looks at both the efficacy and uptake of these behaviors.
 
 Protective behavior efficacy ($\kappa$) scales the transmission term and may range between perfect protection ($\kappa=0$) and no impact on transmission ($\kappa=1$). In our model, protective behaviors prevent susceptible people from becoming sick and prevent infected people from spreading the pathogen. Thus, protective behaviors can have a squared effect on reducing transmission.
@@ -90,6 +92,8 @@ SIR_plot(df)
 
 ```
 
+![](images/epidemic.png)
+
 We also consider protective behavior uptake ($P_0$), which is the proportion of the population participating in the protective behaviors. For example, if $P_0=1$ then that means 100% of the population wash their hands properly. But if $P_0=0.25$ then only about a quarter of the population wash their hands properly and the disease will spread more widely. This model assumes that people are either protective or unprotective and that they cannot change their behavior over time. In the next model, we will consider what happens if people can change their behavior.
 
 In the figure below, we look at what happens if 25%, 50%, or 100% of the population adopts a highly effective protective measure ($\kappa=0.3$). How does protective behavior uptake ($P_0$) affect the epidemic shape and size? Can you find different combinations of values for $P_0$ and $\kappa$ that produce similar epidemic dynamics?
@@ -148,3 +152,6 @@ SIR_plot(df)
 
 
 ```
+
+
+
