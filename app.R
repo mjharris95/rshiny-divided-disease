@@ -94,7 +94,7 @@ ui <- navbarPage(position = ("static-top"), collapsible = TRUE, fluid = TRUE,  t
                             column(5,
                                    
                                    sliderInput(inputId = "kappa2",
-                                               label = withMathJax("Protection efficacy (κ)"),
+                                               label =HTML("Protection efficacy (κ)<br/>Note: greater values mean the behavior is less protective."),
                                                value = 0.3, min = 0, max = 1),
                                    sliderInput(inputId = "P02",
                                                label =  withMathJax("Initial protection prevalence (P₀)"),
@@ -146,7 +146,7 @@ ui <- navbarPage(position = ("static-top"), collapsible = TRUE, fluid = TRUE,  t
                             column(4,
                                    
                                    sliderInput(inputId = "kappa3",
-                                               label = withMathJax("Protection efficacy (κ)"),
+                                               HTML("Protection efficacy (κ)<br/>Note: greater values mean the behavior is less protective."),
                                                value = 0.3, min = 0, max = 1),
                                    sliderInput(inputId = "P03",
                                                label =  withMathJax("Initial protection prevalence (P₀)"),
@@ -210,7 +210,7 @@ ui <- navbarPage(position = ("static-top"), collapsible = TRUE, fluid = TRUE,  t
                             column(3,
                                    
                                    sliderInput(inputId = "kappa4",
-                                               label = withMathJax("Protection efficacy (κ)"),
+                                               HTML("Protection efficacy (κ)<br/>Note: greater values mean the behavior is less protective."),
                                                value = 0.3, min = 0, max = 1) 
                                    
                             ),
