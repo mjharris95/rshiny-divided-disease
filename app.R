@@ -613,7 +613,7 @@ server <- function(input,output){
     SIRvalues3<-SIR_analyze(df)
     
     
-    string_cuminf <- paste("Cumulative infection incidence:", signif(SIRvalues3$CI, digits = 3))
+    string_cuminf <- paste("Note: Changing parameters may change y-axis scale.<br/>Cumulative infection incidence:", signif(SIRvalues3$CI, digits = 3))
     string_peakinf <- paste("Peak infection prevalence:", signif(SIRvalues3$PII, digits = 3))
     #paste(" total number of deaths are", signif(SIRvalues3$D, digits = 3))
     string_whenpeak <- paste("Infection prevalence peak on day:", signif(SIRvalues3$Peak, digits = 3))
@@ -963,7 +963,7 @@ server <- function(input,output){
     SIRvalues4 <- SIR_analyze(df)
     
     
-    string_cuminfa <- paste("Cumulative infection incidence in group a:", signif(SIRvalues4$CI_a, digits = 3))
+    string_cuminfa <- paste("Note: Changing parameters may change y-axis scale.<br/>Cumulative infection incidence in group a:", signif(SIRvalues4$CI_a, digits = 3))
     
     string_cuminfb <- paste("Cumulative infection incidence in group b:", signif(SIRvalues4$CI_b, digits = 3))
     
