@@ -16,7 +16,9 @@ At the end of the *infectious period*, people may recover. Our basic model assum
 
 We can translate these assumptions into a system of equations and then use simulations to predict how epidemics may unfold under different disease properties. Below, we graph the results of a single simulation where we set $\beta=0.2$, $\rho=0.1$, $\mu=0.05$. The graphs below show the proportion of the population in each category over time. The proportion of people who are susceptible decreases as people become infected. Infections increase up to a peak, and then decline. Over time, more people recover or die of the disease. The proportion of the population in these categories levels off as infections decline due to herd immunity.
 
-```{r outbreak, echo = FALSE, message = FALSE, warning = FALSE, dpi=300}
+![](images/graphwithshapes.jpg)
+
+```{r outbreak, echo = FALSE, message = FALSE, warning = FALSE, dpi=300, eval=FALSE}
 library(ggthemes)
 library(magrittr)
 library(dplyr)
@@ -46,12 +48,12 @@ plot(outbreak, ymin=0)
 
 In order to spread the disease, the pathogen needs susceptible people to come into contact with infectious people. As we showed above, there are fewer remaining susceptible people in the population over time. The herd immunity threshold is the point where enough people have become immune that the epidemic begins to slow down. In this scenario, the herd immunity threshold is reached when infections peak, after about 50% of people have been infected. Before then, each infected person infected greater than one person so infections increased. After the peak, fewer people will become infected each day than the day prior. There can still be new infections after the threshold is reached. The amount of infections after the peak is not universal, and varies with different parameters. Using the interactive tab, you can explore how the herd immunity threshold and other features of the epidemic (including its size and duration) depend on pathogen properties like transmissibility and infectious period.
 
-![](images/HIT.png)
+![](images/infected.jpg)
 
 ## What is $R_0$
 
 $R_0$, also known as R-naught is the basic reproduction number, which can help us predict how an epidemic will unfold. $R_0$ indicates the average number of cases an infected individual will produce in a population where everyone is susceptible, helping us predict the trajectory of the disease. The value combines information about pathogen properties and host population features (e.g., host contact rates, infectious period, and transmissibility). In our basic model above, $R_0=\frac{\beta}{\rho}$. This means that the disease will spread more quickly if it has a greater transmission coefficient ($\beta$) or if people are infectious for a longer period of time ($\frac{1}{\rho}$).
 
-An epidemic can occur when $R_0>1$. $R_0<1$ predicts that the disease will die out without being able to sustain an epidemic. When $R_0=1$ and there are no interventions, it predicts stable sustained transmission of the pathogen. For example, consider a hypothetical disease with an $R_0$ of about 10. One infected individual in a classroom could on average infect 10 classmates if nobody is already vaccinated or immune. A hypothetical disease with an $R_0$ of 0.3 would be less likely to cause an epidemic, eventually the disease will die off. It is harder to calculate the $R_0$ early on in an outbreak of a novel disease due to data limitations, but calculating this quantity can help us prepare for an epidemic. Using our interactive simulation tool, you can examine the relationship between $R_0$ and epidemic metrics like cumulative infection incidence, peak infection prevalence, and the date of peak infections. In our next model, we will examine how protective measures can change and help suppress epidemics.
+An epidemic can occur when $R_0>1$. $R_0<1$ predicts that the disease will die out without being able to sustain an epidemic. When $R_0=1$ and there are no interventions, it predicts stable sustained transmission of the pathogen. For example, consider a hypothetical disease, Tendisez, with an $R_0$ of about 10. One infected individual in a classroom could on average infect 10 classmates if nobody is already vaccinated or immune. A hypothetical disease, Whez, with an $R_0$ of 0.3 would be less likely to cause an epidemic, eventually the disease will die off. It is harder to calculate the $R_0$ early on in an outbreak of a novel disease due to data limitations, but calculating this quantity can help us prepare for an epidemic. Using our interactive simulation tool, you can examine the relationship between $R_0$ and epidemic metrics like cumulative infection incidence, peak infection prevalence, and the date of peak infections. In our next model, we will examine how protective measures can change and help suppress epidemics.
 
 ![](images/Picture7.png)

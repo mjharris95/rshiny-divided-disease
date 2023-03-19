@@ -7,7 +7,8 @@ output: html_document
 
 ## **Kimberly Cardenas**
 
-<img src="kimmy_img.jpg" width="200"/>
+
+<img src="OIP2.jpg" width="200"/>
 
 Kimberly Cardenas, from Richmond, California, is pursuing a bachelors degree in Human Biology at Stanford University. She believes scientific research is essential for change in social practices and healthcare policy. Growing up as a child of immigrants, translation and simplification of information has played a huge role in her life. She believes science communication can and should be made more accessible to people of different backgrounds. She is passionate about her role as a chief lab assistant at Arbor free clinic, where she interprets results to her patients in English and Spanish, and develops the training curriculum for new assistants. She also enjoys teaching and mentoring younger students as a Frosh 101 leader. For fun, she enjoys backpacking unfamiliar terrains and is training to become a SPOT leader. She is a proud HSF and QuestBridge Scholar.
 
