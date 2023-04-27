@@ -9,7 +9,7 @@ runtime: shiny
 
 ![](images/labcoat.jpeg)
 
-Protective behaviors are things such as vaccination, mask-wearing, hand washing, and social distancing. These are behaviors can help prevent the spread of infectious diseases. We primarily focus on protective rates that lowers the transmission rate, and not protective behaviors that shift people into the recovered category such as vaccination. Our model looks at both the efficacy and uptake of these behaviors.
+Protective behaviors are things such as vaccination, mask-wearing, hand washing, and social distancing. These are behaviors can help prevent the spread of infectious diseases. We primarily focus on protective behaviors that lowers the transmission rate, and not protective behaviors that shift people into the recovered category such as vaccination. Our model looks at both the efficacy and uptake of these behaviors.
 
 Protective behavior efficacy ($\kappa$) scales the transmission term and may range between perfect protection ($\kappa=0$) and no impact on transmission ($\kappa=1$). In our model, protective behaviors prevent susceptible people from becoming infected and prevent infected people from spreading the pathogen. Thus, protective behaviors can have a squared effect on reducing transmission.
 
