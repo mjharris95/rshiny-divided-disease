@@ -13,10 +13,6 @@ The site consists of 4 "Explainer" tabs and 4 "Interactive App" tabs. You can cl
 
 The site consists of four models that build on each other in terms of complexity:
 
-![](images/Picture1.png)
+![](images/Picture1.png) We start with a basic disease model then ask what happens when people adopt protective behaviors? Protective behaviors are things like masks and social distancing. ![](images/Picture2.png) The awareness based model assumes people will get sick by the pathogen and in return, people asses their own risk which affects what protective measures they take. ![](images/Picture3.png) Then we look at groups and social divisions. What happens when you have two groups and people care more about the deaths within their group? ![](images/Picture4.png)
 
-![](images/Picture2.png)
-
-![](images/Picture3.png)
-
-![](images/Picture4.png)
+![](images/awareness.jpg)

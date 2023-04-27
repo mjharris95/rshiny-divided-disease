@@ -30,6 +30,14 @@ In order to spread the disease, the pathogen needs susceptible people to come in
 
 $R_0$, also known as R-naught is the basic reproduction number, which can help us predict how an epidemic will unfold. $R_0$ indicates the average number of cases an infected individual will produce in a population where everyone is susceptible, helping us predict the trajectory of the disease. The value combines information about pathogen properties and host population features (e.g., host contact rates, infectious period, and transmissibility). In our basic model above, $R_0=\frac{\beta}{\rho}$. This means that the disease will spread more quickly if it has a greater transmission coefficient ($\beta$) or if people are infectious for a longer period of time ($\frac{1}{\rho}$).
 
-An epidemic can occur when $R_0>1$. $R_0<1$ predicts that the disease will die out without being able to sustain an epidemic. When $R_0=1$ and there are no interventions, it predicts stable sustained transmission of the pathogen. For example, consider a hypothetical disease, Tendisez, with an $R_0$ of about 10. One infected individual in a classroom could on average infect 10 classmates if nobody is already vaccinated or immune. A hypothetical disease, Whez, with an $R_0$ of 0.3 would be less likely to cause an epidemic, eventually the disease will die off. It is harder to calculate the $R_0$ early on in an outbreak of a novel disease due to data limitations, but calculating this quantity can help us prepare for an epidemic. Using our interactive simulation tool, you can examine the relationship between $R_0$ and epidemic metrics like cumulative infection incidence, peak infection prevalence, and the date of peak infections. In our next model, we will examine how protective measures can change and help suppress epidemics.
+![](images/paste-DB24177A.png){width="430"}
 
-![](images/Picture7.png)
+An epidemic can occur when $R_0>1$. $R_0<1$ predicts that the disease will die out without being able to sustain an epidemic. When $R_0=1$ and there are no interventions, it predicts stable sustained transmission of the pathogen. For example, consider a hypothetical disease, Brainpox, with an $R_0$ of about 10. One infected individual in a classroom could on average infect 10 classmates if nobody is already vaccinated or immune. A hypothetical disease, Boneitis, with an $R_0$ of 0.3 would be less likely to cause an epidemic, eventually the disease will die off.
+
+![](images/brainpox.jpg){width="317"}
+
+![](images/boneitis.jpg){width="295"}
+
+It is harder to calculate the $R_0$ early on in an outbreak of a novel disease due to data limitations, but calculating this quantity can help us prepare for an epidemic. Using our interactive simulation tool, you can examine the relationship between $R_0$ and epidemic metrics like cumulative infection incidence, peak infection prevalence, and the date of peak infections. In our next model, we will examine how protective measures can change and help suppress epidemics.
+
+![](images/doit.png){width="456"}
